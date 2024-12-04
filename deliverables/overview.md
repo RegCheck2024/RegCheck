@@ -1,6 +1,7 @@
 # Überblick über die Liefergegenstände des Projekts RegCheck
 
 | Meilenstein | Nummer | Liefergegenstand |
+| --- | --- | --- |
 | 3 | D6.3 | Umfeldanalyse |
 | 4 | D2.1 | Studie methodisches Vorgehen |
 | 4 | D2.2 | Initialversion Datenmodell Wissensgraph |
