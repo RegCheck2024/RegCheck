@@ -1,0 +1,307 @@
+@prefix adms: <http://www.w3.org/ns/adms#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix org: <http://www.w3.org/ns/org#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix shacl: <http://www.w3.org/ns/shacl#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix capde: <http://cccev-ap.de/#> .
+@prefix cv: <http://data.europa.eu/m8g/> .
+@prefix dcatde: <http://dcat-ap.de/def/> .
+
+<http://data.europa.eu/m8g> a owl:Ontology .
+<http://cccev-ap.de/#> a owl:Ontology .
+
+capde:ConceptShape
+  a shacl:NodeShape ;
+  shacl:property [
+    shacl:path skos:prefLabel ;
+    shacl:description "Name of the concept."@en ;
+    shacl:name "concept"@en ;
+  ] ;
+  shacl:property [
+    shacl:path dcterms:description ;
+    shacl:description "Description of the concept."@en ;
+    shacl:name "concept description"@en ;
+  ] ;
+  shacl:property [
+    shacl:path skos:inScheme ;
+    shacl:description "Assignment to concept scheme"@en ;
+    shacl:name "in scheme"@en ;
+    shacl:class skos:ConceptScheme ;
+  ] ;
+  shacl:targetClass skos:Concept .
+
+capde:ConceptSchemeShape
+  a shacl:NodeShape ;
+  shacl:property [
+    shacl:path skos:prefLabel ;
+    shacl:description "Name of the concept scheme."@en ;
+    shacl:name "concept scheme"@en ;
+  ] ;
+  shacl:property [
+    shacl:path dcterms:description ;
+    shacl:description "Description of the concept scheme."@en ;
+    shacl:name "concept scheme description"@en ;
+  ] ;
+  shacl:targetClass skos:ConceptScheme .
+
+cv:EvidenceShape
+  a shacl:NodeShape ;
+  shacl:property [
+    shacl:path skos:prefLabel;
+    shacl:description "Name des Nachweises."@de;
+    shacl:name "Nachweisname"@de ;
+  ] ;
+  shacl:property [
+    shacl:path dcterms:description;
+    shacl:description "Beschreibung des Nachweises."@de;
+    shacl:name "Nachweisbeschreibung"@de ;
+  ] ;
+  shacl:property [
+    shacl:path dcterms:publisher;
+    shacl:description "Legal authority responsible for the Evidence."@en;
+    shacl:minCount 1;
+    shacl:class cv:PublicOrganisation ;
+    shacl:name "is issued by"@en ;
+  ] ;
+  shacl:property [
+    shacl:path cv:supportsConcept;
+    shacl:description "Information Concept(s) providing facts inferred from the Evidence."@en;
+    shacl:minCount 1;
+    shacl:class cv:InformationConcept ;
+    shacl:name "supports concept"@en ;
+  ] ;
+  shacl:property [
+    shacl:path cv:supportsRequirement;
+    shacl:description "Requirement for which the Evidence provides proof."@en;
+    shacl:class cv:InformationRequirement ;
+    shacl:name "supports requirement"@en ;
+  ] ;
+    shacl:targetClass cv:Evidence .
+
+cv:InformationConceptShape
+  a shacl:NodeShape ;
+  shacl:property [
+    shacl:path capde:isConceptOf;
+    shacl:description "An Information Concept can contain other Information Concepts, such as an address that contains street and postal code."@en;
+    shacl:class cv:InformationConcept ;
+    shacl:name "isConceptOf"@en ;
+  ] ;
+    shacl:property [
+    shacl:path dcterms:description ;
+    shacl:description "Short explanation of the Information Concept."@en;
+    shacl:datatype xsd:string ;
+    shacl:name "description"@en ;
+  ] ;
+    shacl:property [
+    shacl:path adms:identifier ;
+    shacl:description "URI of the Information Concept."@en;
+    shacl:class adms:Identifier ;
+    shacl:name "identified by"@en ;
+  ] ;
+    shacl:property [
+    shacl:path skos:prefLabel ;
+    shacl:description "Name of the Information Concept."@en;
+    shacl:minCount 1;
+    shacl:datatype xsd:string ;
+    shacl:name "name"@en ;
+  ] ;
+   shacl:property [
+    shacl:path capde:reasonsForUse ;
+    shacl:description "Reason for / intended usage of the Information Concept."@en;
+    shacl:name "reasonForUse"@en ;
+  ] ;
+  shacl:targetClass cv:InformationConcept .
+
+  capde:reasonsForUseShape
+  a shacl:NodeShape ;
+    shacl:property [
+    shacl:path capde:whenUsedFor ;
+    shacl:description "Reference to the InformationRequirement in question."@en;
+    shacl:minCount 1;
+    shacl:maxCount 1; 
+    shacl:class cv:InformationRequirement ;
+    shacl:name "reasonRelatedTo"@en ;
+  ] ;
+   shacl:property [
+    shacl:path capde:reasoning ;
+    shacl:description "Description of reason."@en;
+    shacl:datatype xsd:string ;
+    shacl:minCount 1 ;
+    shacl:maxCount 1 ;
+    shacl:name "reasoning"@en ;
+  ] ;
+  shacl:targetObjectsOf capde:reasonForUse. 
+
+adms:identifierShape a shacl:NodeShape ;
+  shacl:property [
+    shacl:path adms:schemaAgency ;
+    shacl:description "The name of the agency that issued the identifier."@en;
+    shacl:minCount 1 ;
+    shacl:datatype xsd:string ;
+    shacl:name "Agency"@en ;
+  ];
+  shacl:property [
+    shacl:path skos:notation ;
+    shacl:description "ID-String im Kontext des ID-Schemas (Agency)."@de;
+    shacl:minCount 1 ;
+    shacl:datatype xsd:string ;
+    shacl:name "ID-String"@de ;
+  ];
+  shacl:targetObjectsOf adms:identifier .
+
+cv:ReferenceFrameworkShape
+  a shacl:NodeShape ;
+  shacl:property [
+    shacl:path dcterms:identifier ;
+    shacl:description "URI of the Reference Framework."@en;
+    shacl:name "identifier"@en ;
+    shacl:datatype xsd:string ;
+  ] ;
+  shacl:property [
+    shacl:path skos:prefLabel ;
+    shacl:description "Name of the reference framework."@en;
+    shacl:name "name"@en ;
+    shacl:datatype xsd:string ;
+  ] ;
+  shacl:targetClass cv:ReferenceFramework .
+
+cv:RequirementShape
+  a shacl:NodeShape ;
+  shacl:property [
+    shacl:path dcterms:description ;
+    shacl:description "Short explanation of the Requirement."@en;
+    shacl:minCount 1;
+    shacl:datatype xsd:string ;
+    shacl:name "description"@en ;
+  ] ;
+  shacl:property [
+    shacl:path skos:prefLabel ;
+    shacl:description "Name of the Requirement."@en;
+    shacl:datatype xsd:string ;
+    shacl:name "name"@en ;
+  ] ;
+  shacl:property [
+    shacl:path cv:hasConcept ;
+    shacl:description "Information Concept for which a value is expected by the Requirement."@en;
+    shacl:name "has concept"@en ;
+    shacl:class cv:InformationConcept ;
+  ] ;
+  shacl:property [
+    shacl:path cv:hasRequirement ;
+    shacl:description "A more specific Requirement that is part of the Requirement."@en;
+    shacl:name "has requirement"@en ;
+    shacl:class cv:Requirement ;
+  ] ;
+  shacl:property [
+    shacl:path cv:hasSupportingEvidence ;
+    shacl:description "Evidence that supplies information, proof or support for the Requirement."@en;
+    shacl:name "has supporting evidence"@en ;
+    shacl:class cv:Evidence ;
+  ] ;
+  shacl:property [
+    shacl:path dcterms:identifier ;
+    shacl:description "URI of the Requirement."@en;
+    shacl:name "identifier"@en ;
+    shacl:datatype xsd:string ;
+  ] ;
+  shacl:property [
+    shacl:path cv:isDerivedFrom ;
+    shacl:description "Reference Framework on which the Requirement is based, such as a law or regulation."@en;
+    shacl:name "is derived from"@en ;
+    shacl:class cv:ReferenceFramework ;
+  ] ;
+    shacl:property [
+    shacl:path dcterms:publisher ;
+    shacl:description "Public Organisation that has published the Requirement."@en;
+    shacl:name "is issued by"@en ; 
+    shacl:class cv:PublicOrganisation ;
+  ] ;
+  shacl:property [
+    shacl:path capde:betrifftAbweichendePerson ;
+    shacl:description "Angabe einer von der antragsstellenden Person abweichenden betroffenen Person."@de;
+    shacl:name "betrifft abweichende Person"@de ; 
+    shacl:class skos:Concept ;
+  ] ;
+  shacl:property [
+    shacl:path dcatde:politicalGeocodingURI ;
+    shacl:description "Zur kodierten Angabe der konkreten Verwaltungseinheit."@de ;
+    shacl:name "Verwaltungseinheit"@de ;
+  ] ;
+  shacl:targetClass cv:Requirement .
+
+cv:InformationRequirementShape
+  a shacl:NodeShape ;
+  shacl:subClassOf cv:Requirement ;
+  shacl:targetClass cv:InformationRequirement .
+
+cv:PublicOrganisationShape
+  a shacl:NodeShape ;
+  shacl:targetClass cv:PublicOrganisation ;
+  shacl:property [
+    shacl:path skos:prefLabel ;
+    shacl:description "Primary, legally recognised name of the Public Organisation."@en ;
+    shacl:name "Public Organisation"@en ;
+    shacl:datatype xsd:string ;
+    shacl:minCount 1 ;
+  ] ;
+  shacl:property [
+    shacl:path dcatde:politicalGeocodingLevel ;
+    shacl:description "Zur kodierten Angabe der jeweiligen prinzipiellen Verwaltungsebene."@de ;
+    shacl:name "Verwaltungsebene"@de ;
+  ] ;
+  shacl:property [
+    shacl:path dcterms:identifier ;
+    shacl:description "URI of the Public Organisation, i.e. ID provided by Evidence Survey Mapping."@en ;
+    shacl:name "identifier"@en ;
+    shacl:datatype xsd:string ;
+  ] ;
+  shacl:property [
+    shacl:path capde:gefuehrtVon ;
+    shacl:description "Angabe der registerführenden Behörde."@de;
+    shacl:name "geführt von"@de ; 
+    shacl:class cv:PublicOrganisation ;
+  ] .
+# Public Organisation kann eine Doppelrolle erfüllen: Registertyp und Registerführende Stelle.
+
+cv:PublicServiceShape
+  a shacl:NodeShape ;
+  shacl:targetClass cv:PublicService ;
+  shacl:property [
+    shacl:path dcterms:description ;
+    shacl:description "Description of the Public Service."@en ;
+    shacl:name "description"@en ;
+    shacl:datatype xsd:string ;
+  ] ;
+  shacl:property [
+    shacl:path dcterms:identifier ;
+    shacl:description "URI of the Public Service."@en ;
+    shacl:name "identifier"@en ;
+    shacl:datatype xsd:string ;
+  ] ;
+  shacl:property [
+    shacl:path skos:prefLabel ;
+    shacl:description "Official Name of the Public Service."@en ;
+    shacl:name "name"@en ;
+    shacl:datatype xsd:string ;
+  ] ;
+  shacl:property [
+    shacl:path cv:hasCompetentAuthority ;
+    shacl:description "Links a Public Service to a Public Organisation, which is the responsible Agent for the delivery of the Public Service."@en ;
+    shacl:name "has competent authority"@en ;
+    shacl:class cv:PublicOrganisation ;
+    shacl:minCount 1 ;
+  ]  ;
+  shacl:property [
+    shacl:path cv:holdsRequirement ;
+    shacl:description "It links a Public Service to a class that describes the Requirement."@en ;
+    shacl:name "holds requirement"@en ;
+    shacl:class cv:InformationRequirement ;
+  ].
+
+
+
